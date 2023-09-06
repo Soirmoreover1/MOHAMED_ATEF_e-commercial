@@ -25,7 +25,7 @@ router.post('/register', async (req, res) => {
     const token = await user.generateAuthToken()
 
     await user.save();
-    res.status(201).send({user,token}).json(token);
+    res.status(201).send({user,token}).json({user,token});
   } catch (error) {
     res.status(500).json({ message:error.message });
   }
@@ -47,16 +47,17 @@ router.post("/login", async (req, res, next) => {
     );
   }
   const copmarpass = await bcrypt.compare(password, finduser.password);
-  if (!copmarpass) {
-  next(
-    customerError({
-      statusCode: 401,
-      message: "password or email is not correct",
-    })
-  );
+  if (copmarpass) {
+    const token = await finduser.generateAuthToken();
+    res.status(200).send(token).json(token); 
 }
-const token = await finduser.generateAuthToken();
-    res.status(200).send(token);
+next(
+  customerError({
+    statusCode: 401,
+    message: "password or email is not correct",
+  })
+);
+
 });
 
 

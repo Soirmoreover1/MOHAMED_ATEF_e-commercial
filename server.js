@@ -2,9 +2,6 @@ require('./db')
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
-
-
-
 app.use(express.json());
 
 const {authorized , adminauthorized} = require('./middlewares/authenticate');
@@ -16,7 +13,7 @@ const orderRoutes = require('./routes/orderRoutes');
 
 app.use('/users', userRoutes);
 app.use('/products' , productRoutes);
-app.use('/cart', authorized,cartRoutes);
+app.use('/cart',cartRoutes);
 app.use('/orders', authorized ,orderRoutes);
 
 app.use((err , req ,res ,next)=>{

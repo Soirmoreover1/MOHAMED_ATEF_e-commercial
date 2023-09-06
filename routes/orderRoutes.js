@@ -8,7 +8,7 @@ const {authorized , adminauthorized} = require('../middlewares/authenticate');
 router.post('/verify',authorized, async (req, res) => {
     try {
       const order = new Order({
-        userId: req.user._id,
+        userId: req.user.id,
         cartItems: req.body.cartItems
       });
   
@@ -22,7 +22,7 @@ router.post('/verify',authorized, async (req, res) => {
 // Cancel order
 router.post('/cancel', authorized , async (req, res) => {
     try {
-      await Order.deleteOne({ userId: req.user._id, _id: req.body.orderId });
+      await Order.deleteOne({ userId: req.user.id, id: req.body.orderId });
       res.json({ message: 'Order cancelled.' });
     } catch (error) {
       res.status(500).json({ message: 'An error occurred.' });

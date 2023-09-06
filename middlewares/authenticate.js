@@ -6,9 +6,9 @@ const customerError = require('../CustomerError')
 
 const authorized = async (req, res, next) => {
     const { authorization: token } = req.headers
-    const decoded = await asyncverify(token, "vvnionv")
+    const decoded = await asyncverify(token, process.env.JWT_SECRET)
     
-    if (decoded.id !== req.params.id){ 
+    if (decoded.isAdmin ){ 
         next(customerError({
         message: "Not Authorized",
         statusCode: 401
@@ -17,7 +17,7 @@ const authorized = async (req, res, next) => {
 }
 const adminauthorized =  async (req, res, next) => {
     const { authorization: token } = req.headers
-    const decoded = await asyncverify(token, "vvnionv")
+    const decoded = await asyncverify(token, process.env.JWT_SECRET)
     console.log(req.params.id)
     if (!decoded.isAdmin) 
         next(customerError({

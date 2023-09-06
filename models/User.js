@@ -57,7 +57,7 @@ const userSchema = new mongoose.Schema({
       id: this.id,
       email: this.email,
       isAdmin: this.isAdmin,
-  }, "vvnionv");
+  }, process.env.JWT_SECRET);
   return token;
  }
 

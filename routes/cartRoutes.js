@@ -13,10 +13,10 @@ const {authorized , adminauthorized} = require('../middlewares/authenticate');
 
 
 // Add a product to the cart
-router.post('/put',async (req, res) => {
+router.post('/add/:userId',async (req, res) => {
     try {
       const cartItem = new CartItem({
-        userId: req.user._id,
+        userId: req.params.id,
         productId: req.body.productId,
         quantity: req.body.quantity
       });
@@ -30,10 +30,21 @@ router.post('/put',async (req, res) => {
   });
 
 // Get user's cart
-router.get('/cart/:userId',authorized, async (req, res) => {
+router.get('/show/:userId',authorized,async (req, res) => {
     try {
-      const cartItems = await CartItem.find({ userId: req.params.userId }).populate('productId');
-      res.json(cartItems);
+      const cartItems = await CartItem.find({ userId: req.params.id }).populate('productId');
+      res.send(cartItems).json(cartItems);
+    } catch (error) {
+      res.status(500).json({ message: 'An error occurred.' });
+    }
+  });
+
+
+
+  router.delete('/delete/:userId',authorized, async (req, res) => {
+    try {
+      await CartItem.findByIdAndDelete(req.params.userId);
+      res.json({ message: 'cart deleted.' });
     } catch (error) {
       res.status(500).json({ message: 'An error occurred.' });
     }
